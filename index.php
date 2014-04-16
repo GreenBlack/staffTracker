@@ -1,40 +1,25 @@
 
 <meta charset="UTF-8">
 <?php 
+include("methods.php");
 
-$data = json_decode(file_get_contents('https://ttt-fun.com/staff/?json=1'), true);
-
-//print_r ($data);
-
-$id2time;
-$id2player;
-$id264;
-
-/*
-    STEAMID TO PLAYTIME
-*/
-for ($i = 0; $i < count($data); $i++){
-    $id2time[$data[$i]['steam']] = $data[$i]['onlinetime'];
+if ($_GET["action"] == "save"){
+    $data = json_decode(file_get_contents('https://ttt-fun.com/staff/?json=1'), true);
+    
+    for ($i = 0; $i < count($data); $i++){
+        $id2time[id264($data[$i]['steam'])] = $data[$i]['onlinetime'];
+    }   
+    
+    $fp = fopen("saves/".date('Y-m-d'). ".json", 'w');
+    fwrite($fp, json_encode($id2time));
+    fclose($fp);
 }
 
-/*
-    STEAMID TO PLAYERID
-*/
-for ($i = 0; $i < count($data); $i++){
-    $id2player[$data[$i]['steam']] = $data[$i]['nick'];
+if ($_GET["action"] == "load"){
+    $date=$_GET["date"];
+    echo( file_get_contents("http://pb-mc.net/a/saves/". $date . ".json"));
+    
 }
-
-/*
-    STEAMID TO 64BIT STEAMID
-*/
-for ($i = 0; $i < count($data); $i++){
-    list($e, $type, $id) = split(":", $data[$i]['steam']);
-    $id264[$data[$i]['steam']] = ($id * 2) + 76561197960265728 + $type;
-}
-
-
-var_dump($id264);
-
 ?>
 
 </body>
