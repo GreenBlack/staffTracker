@@ -1,5 +1,4 @@
 
-<meta charset="UTF-8">
 <?php 
  
 //major dependency
@@ -11,7 +10,7 @@ include("methods.php");
 
 if ($_GET["action"] == "save"){
     
-    echo("Save started at " . date('i:s'));
+    echo("\nSave started at " . date('i:s'));
     
     $data = json_decode(file_get_contents('https://ttt-fun.com/staff/?json=1'), true);
     for ($i = 0; $i < count($data); $i++){
@@ -22,7 +21,7 @@ if ($_GET["action"] == "save"){
     fwrite($fp, json_encode($id2time));
     fclose($fp);
     
-    echo("<br>Save finished at ". date('i:s'));
+    echo("\nSave finished at ". date('i:s') . "\n");
 }
 
 /*
