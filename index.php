@@ -10,10 +10,6 @@ $id2time;
 $id2player;
 $id264;
 
-//for ($i = 0; $i < count($data); $i++){
-//    echo($data[$i]['nick'] . "<br><b>Time </b>" . date("W:H:m:s", $data[$i]["onlinetime"]) . "<br><br><br>");
-//}
-
 /*
     STEAMID TO PLAYTIME
 */
@@ -29,17 +25,8 @@ for ($i = 0; $i < count($data); $i++){
 }
 
 /*
-    
+    STEAMID TO 64BIT STEAMID
 */
-for ($i = 0; $i < count($data); $i++){
-    $id2time[$data[$i]['steam']] = $data[$i]['onlinetime'];    
-}
-
-for ($i = 0; $i < count($data); $i++){
-    $id2time[$data[$i]['steam']] = $data[$i]['onlinetime'];    
-}
-
-
 for ($i = 0; $i < count($data); $i++){
     list($e, $type, $id) = split(":", $data[$i]['steam']);
     $id264[$data[$i]['steam']] = ($id * 2) + 76561197960265728 + $type;
