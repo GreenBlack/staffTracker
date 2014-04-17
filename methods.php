@@ -1,4 +1,5 @@
 <?php
+
 /*
     Converts $steamID into steam64 and returns it
 */

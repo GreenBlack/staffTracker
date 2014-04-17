@@ -1,27 +1,40 @@
-
 <?php 
- 
+header('Content-Type: charset=utf-8');
 //major dependency
 include("methods.php");
 
 /*
-    Save function, will run every 24 hours or every hour depending on crontab status
+    Save function, will run every 24 hours or every hour depending on crontab status. impliments IP security
 */
 
 if ($_GET["action"] == "save"){
     
+    $accessIP = "208.146.35.21";
+    
+    if ($_SERVER['REMOTE_ADDR'] != $accessIP) {
+        $access = "Bad request at ". date("Y-m-d h:i:s A"). " with ip " . $_SERVER['REMOTE_ADDR'] . "\n";
+        
+        echo($access);
+        
+        $fd = fopen("access.txt", 'a');
+        fwrite($fd, $access);
+        fclose($fd);
+    }else{
     echo("\nSave started at " . date('i:s'));
     
     $data = json_decode(file_get_contents('https://ttt-fun.com/staff/?json=1'), true);
+    
     for ($i = 0; $i < count($data); $i++){
         $id2time[steamID_steam64($data[$i]['steam'])] = $data[$i]['onlinetime'];
     }   
     
     $fp = fopen("saves/".date('Y-m-d@H'). ".json", 'w');
+    
     fwrite($fp, json_encode($id2time));
     fclose($fp);
     
     echo("\nSave finished at ". date('i:s') . "\n");
+    }
 }
 
 /*
@@ -33,6 +46,9 @@ if ($_GET["action"] == "load"){
     if (isset($_GET["date"])){
     echo( file_get_contents("http://pb-mc.net/a/saves/". $_GET["date"] . ".json"));
     }
+    else{
+        header("Location: http://pb-mc.net/a/saves/");
+    }
+            
 }
-
 ?>
