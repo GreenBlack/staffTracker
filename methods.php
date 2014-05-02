@@ -14,7 +14,13 @@ function steamID_steam64($steamID){
     Gets player.json from valve with $steam64 then returns it decoded
 */
 function steam64_json($steam64){
-    return json_decode(file_get_contents('https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=CA7B8780E22D27C381BD47BF41565B27&steamids='. strval($steam64)), true);
-    
+    $x = json_decode(file_get_contents('https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=CA7B8780E22D27C381BD47BF41565B27&steamids='. strval($steam64)), true);
+    return $x["response"]["players"];
 }
 
+function save($location, $filename, $data, $extention, $action){
+#	save("saves", "test", null, ".txt", "w")	#
+	$fp = fopen( $location . "/" . $filename .  $extention, $action);
+	fwrite($fp, $data);
+    fclose($fp);
+}
