@@ -2,15 +2,15 @@
 //major dependency
 include("methods.php");
 
+$accessIP = ["208.146.35.21"];
 #	Save function, will run every 24 hours or every hour depending on crontab status. impliments IP security	#
+
+ if (in_array ($_SERVER['REMOTE_ADDR'], $accessIP)) {
 
 if ($_GET["action"] == "save"){
     
 	/* accessIP contains IP addresses that are allowed to access the save function */
-	
-    $accessIP = ["208.146.35.21"];
     
-    if (in_array ($_SERVER['REMOTE_ADDR'], $accessIP)) {
 		
 		 echo("\nSave started at " . date('i:s'));
     
@@ -33,15 +33,9 @@ if ($_GET["action"] == "save"){
 		save("saves/v2", date('Y-m-d@H'), json_encode($savef), ".json", "w");
     
     echo("\nSave finished at ". date('i:s') . "\n");
-    }else{
-		
-        $access = "Bad request at ". date("Y-m-d h:i:s A"). " with IP " . $_SERVER['REMOTE_ADDR'] . "\n";
-        
-        echo($access . "Your IP has been logged.");
-		save(".", "access", $_SERVER['REMOTE_ADDR'] . " ", ".txt", "a");
-	}
-}
-    elseif($_GET["action"] == "log"){
+    }
+	 
+elseif($_GET["action"] == "log"){
 
 $data = file_get_contents("./access.txt");
 $data = explode(" ", $data, -1);
@@ -63,7 +57,41 @@ foreach($finished as $ip => $times){
     echo($ip . " : " . $times . "\n");
 }
 	
-}else{ ?>
+}if ($_GET['action'] == "cache")
+
+        {
+		
+		sleep(60);
+		
+        $data = json_decode(file_get_contents("./saves/v2/" . date("Y-m-d@H") . ".json"), true);
+        
+            $steamQuery;
+            
+        for($i = 0; $i < count($data); $i++)
+        {
+            $steamID[$data[$i]["steamID"]] = null;
+        }
+        
+        foreach($steamID as $id => $x){
+        
+        $steamQuery .= $id. ",";
+        
+        }
+        
+        
+        $idData = steam64_json($steamQuery);
+
+        for($i = 0; $i < count($idData); $i++)
+        {
+                   $steamID[(string)$idData[$i]["steamid"]] = $idData[$i]["personaname"];
+        }
+        
+        echo("cache started at " . date("H:m") . "<br>\n");
+        save(".", "cache", json_encode($steamID), ".json", "w");
+        echo("finished cache at ". date("H:m") . "<br>\n cahched " . count($steamID) . " names");
+    }
+ }
+else{ ?>
 <!DOCTYPE html>
 <html>
 
@@ -98,7 +126,7 @@ foreach($finished as $ip => $times){
             </h1>
 			<h3 class="animated fadeInDown">
 				<center>
-					Working on name caching system so the page loads 10x faster.<br><a href="https://github.com/PixelByte/staffTracker">Project's Github</a>
+					Caching system is now complete. Page loads 10x faster.<br>If a staff member has been removed, it takes 1 hour for the name cache to update.<br><a href="https://github.com/PixelByte/staffTracker">Project's Github</a>
 					
 				</center>
 			</h2>
@@ -111,30 +139,28 @@ foreach($finished as $ip => $times){
 			<?php
 			
 				echo( "Saves: ". ((int)count(scandir("saves/v2")) - 2) .
-					 "<br>First: " . substr(scandir("saves/v2")[2], 0, 13) .
-					 "<br>latest: " . date("Y-m-d@H")).
-					"<br><br>";	
+					 "<br><br>First: " . substr(scandir("saves/v2")[2], 0, 13) .
+					 "<br>Fast: " . date("Y-m-d@H") . " (most recent)<br>"
+	);
+	
+	?>
+			<?php
+	if(isset($_GET['id'])){
+	
+            $nameCache = json_decode(file_get_contents("./cache.json"), true);
 			$day1;
 			$day2;
 		
 			$date1 = "2014-04-16@16";
 			$date2 = date('Y-m-d@H');
 		
-			$search = [$_GET["id"]];
-		
-			
-		
-			echo("searching IDs <br>".
-				"from " . $date1.
-				"<br>to " . $date2.
-				
-				 "<br><br>ID(s) " );
+			$search = [$_GET['id']];
 		
 			foreach($search as $id){
 				if ($id === null){
 					//exit;
 				}else
-				echo($id . ", ");
+				echo("<br>SteamID: ".$id . ", ");
 			}
 		
 			$data1 = json_decode(file_get_contents("./saves/v2/" . $date1 . ".json"), true);
@@ -152,8 +178,9 @@ foreach($finished as $ip => $times){
 			
 		$time[$i] = $day2[$search[$i]] - $day1[$search[$i]];
 			
-			echo "<br><br>".(steam64_json($search[$i])[0]["personaname"])." ".gmdate("H:i:s", $time[$i]%86400);
+			echo "<br><br>Staff member <b>".$nameCache[$search[$i]]."</b> has played <b>". time_elapsed_A($time[$i]) . "</b> between <b>2014-04-16@16</b> and <b>" .  date('Y-m-d@H') . "</b>";
 		}
+	}
 			?>
         </div>
     </div>
