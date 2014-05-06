@@ -1,7 +1,7 @@
 <?php
 
 /*
-    Cacheing function for faster name loading
+    Caching function for faster name loading
 */
 
 function cache()
@@ -15,13 +15,13 @@ function cache()
 
 		$steamQuery;
 
-	//define assosiative array (dictonary) and set the values to null to be replaced.
+	//define associative array (dictonary) and set the values to null to be replaced.
 	for($i = 0; $i < count($data); $i++)
 	{
 		$steamID[$data[$i]["steamID"]] = null;
 	}
 
-	//loop through every assosiative array key and append them to a string.
+	//loop through every associative array key and append them to a string.
 	foreach($steamID as $id => $x)
 	{
 		$steamQuery .= $id. ",";
@@ -30,7 +30,7 @@ function cache()
 	//send that string to steam and get profile/playerdata back (method included in this class).
 	$idData = steam64_json($steamQuery);
 
-	//loop through the data that steam returned and append it to an assosiative array in the form of key = 64bitID => value = steam name at time of request.
+	//loop through the data that steam returned and append it to an associative array in the form of key = 64bitID => value = steam name at time of request.
 	for($i = 0; $i < count($idData); $i++)
 	{
 			   $steamID[(string)$idData[$i]["steamid"]] = $idData[$i]["personaname"];
