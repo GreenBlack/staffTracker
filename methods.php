@@ -1,7 +1,7 @@
 <?php
 
 /*
-    Caching function for faster name loading
+    Cacheing function for faster name loading
 */
 
 function cache()
@@ -10,18 +10,18 @@ function cache()
 	//sleep for one minute to eliminate the possibility of un-finished saves.
 	sleep(60);
 
-	//load most current file. Because the cache and save file are run at the same second, that's why we wait to make sure the file exists before loading it.
+	//load most current file. Because the cache ans save file are run at the same second, that's why we wait to make sure the file exists before loading it.
 	$data = json_decode(file_get_contents("./saves/v2/" . date("Y-m-d@H") . ".json"), true);
 
 		$steamQuery;
 
-	//define associative array (dictonary) and set the values to null to be replaced.
+	//define assosiative array (dictonary) and set the values to null to be replaced.
 	for($i = 0; $i < count($data); $i++)
 	{
 		$steamID[$data[$i]["steamID"]] = null;
 	}
 
-	//loop through every associative array key and append them to a string.
+	//loop through every assosiative array key and append them to a string.
 	foreach($steamID as $id => $x)
 	{
 		$steamQuery .= $id. ",";
@@ -30,7 +30,7 @@ function cache()
 	//send that string to steam and get profile/playerdata back (method included in this class).
 	$idData = steam64_json($steamQuery);
 
-	//loop through the data that steam returned and append it to an associative array in the form of key = 64bitID => value = steam name at time of request.
+	//loop through the data that steam returned and append it to an assosiative array in the form of key = 64bitID => value = steam name at time of request.
 	for($i = 0; $i < count($idData); $i++)
 	{
 			   $steamID[(string)$idData[$i]["steamid"]] = $idData[$i]["personaname"];
