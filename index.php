@@ -20,7 +20,7 @@ if (in_array ($_SERVER['REMOTE_ADDR'], $accessIP))
 		//load staff data from TTT-Fun
     	$data = json_decode(file_get_contents('https://ttt-fun.com/staff/?json=1'), true);
 
-		//loop through the TTT-Fun data and add it to a Dictionary array
+		//loop through the TTT-Fun data and add it to a dictionary array
     	for ($i = 0; $i < count($data); $i++)
 		{
         	$savef[$i]["steamID"] = steamID_steam64($data[$i]['steam']);
@@ -203,7 +203,7 @@ HTML;
     /*
                             IMPORTANT
 
-    Make sure to fix BOLTH includes before loading the page up.
+    Make sure to fix BOTH includes before loading the page up.
     */
     include('./footer.php'); 
     ?>
