@@ -62,6 +62,7 @@ function steamID_steam64($steamID)
 /*
 	Steam data
 */
+<<<<<<< HEAD
 
 function steam64_json($steam64)
 {
@@ -91,6 +92,21 @@ function time_elapsed_A($secs){
 	
 	if($secs == null){ return false; }
 	
+=======
+function steam64_json($steam64){
+    $x = json_decode(file_get_contents('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=CA7B8780E22D27C381BD47BF41565B27&steamids='. strval($steam64)), true);
+    return $x["response"]["players"];
+}
+
+function save($location, $filename, $data, $extention, $action){
+#	save("saves", "test", null, ".txt", "w")	#
+	$fp = fopen( $location . "/" . $filename .  $extention, $action);
+	fwrite($fp, $data);
+    fclose($fp);
+}
+
+function time_elapsed_A($secs){
+>>>>>>> c1ca423e92c5e7910bca84e3a04f36b915fe8ad3
     $bit = array(
         'y' => $secs / 31556926 % 12,
         'w' => $secs / 604800 % 52,
